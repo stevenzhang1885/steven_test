@@ -22,7 +22,7 @@ if [ "$1" == "clean" ];then
     for node in $orderer_list  $peer_list  $user_list ;do
     if [ "$2" == "$node" ];then
         echo "-------------------------------------------------Clean: rm $STEVENORG_DIR/$org/$node ------------------------------------------------------"
-        rm $STEVENORG_DIR/$org/$node -rf
+        rm $STEVENORG_DIR/$org/*/$node -rf
     fi
     done
     exit 0
@@ -54,26 +54,26 @@ for peer in $peer_list;do
     fi
 
     echo "fabric-ca-client enroll -d -u https://$peer:$peer-pw@$rca_ipaddr --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $CSRHOST --mspdir $STEVENORG_DIR/$org/$peer/msp"
-    fabric-ca-client enroll -d -u https://$peer:$peer-pw@$rca_ipaddr --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $CSRHOST --mspdir $STEVENORG_DIR/$org/$peer/msp
+    fabric-ca-client enroll -d -u https://$peer:$peer-pw@$rca_ipaddr --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $CSRHOST --mspdir $STEVENORG_DIR/$org/app/$peer/msp
     if [ "$?" -ne 0 ];then
         exit 1
     fi
-    cp -r $FABRIC_CA_CLIENT_HOME/$rca_org/$tls/msp/tlscacerts $STEVENORG_DIR//$org/$peer/msp
+    cp -r $FABRIC_CA_CLIENT_HOME/$rca_org/$tls/msp/tlscacerts $STEVENORG_DIR//$org/app/$peer/msp
 done
 echo "-------------------------------------------------STEVEN: Register & Enroll orderer Identity With rca.steven-------------------------------------------------------"
 #Register steven node  to RCA.STEVEN
 for orderer in $orderer_list;do
     tls=${node_tls_map[$orderer]}
-    echo "fabric-ca-client register -d --id.name $orderer --id.secret $orderer-pw -u https://$rca_ipaddr  --tls.certfiles $tls-root-cert/$tls-ca-cert.pem  --mspdir $rca.admin/msp"
-    fabric-ca-client register -d --id.name $orderer --id.secret $orderer-pw -u https://$rca_ipaddr  --tls.certfiles $tls-root-cert/$tls-ca-cert.pem  --mspdir $rca.admin/msp
+    echo "fabric-ca-client register -d --id.name $orderer --id.secret $orderer-pw -u https://$rca_ipaddr  --tls.certfiles $tls-root-cert/$tls-ca-cert.pem  --mspdir $rca_org.admin/msp"
+    fabric-ca-client register -d --id.name $orderer --id.secret $orderer-pw -u https://$rca_ipaddr  --tls.certfiles $tls-root-cert/$tls-ca-cert.pem  --mspdir $rca_org.admin/msp
     if [ "$?" -ne 0 ];then
         echo "Register $orderer FAIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     fi
 
     echo "fabric-ca-client enroll -d -u https://$orderer:$orderer-pw@$rca_ipaddr --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $CSRHOST --mspdir $STEVENORG_DIR/$org/$orderer/msp"
-    fabric-ca-client enroll -d -u https://$orderer:$orderer-pw@$rca_ipaddr --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $CSRHOST --mspdir $STEVENORG_DIR/$org/$orderer/msp
+    fabric-ca-client enroll -d -u https://$orderer:$orderer-pw@$rca_ipaddr --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $CSRHOST --mspdir $STEVENORG_DIR/$org/orderer/$orderer/msp
     if [ "$?" -ne 0 ];then
         exit 1
     fi
-    cp -r $FABRIC_CA_CLIENT_HOME/$rca_org/$tls/msp/tlscacerts $STEVENORG_DIR/$org/$orderer/msp
+    cp -r $FABRIC_CA_CLIENT_HOME/$rca_org/$tls/msp/tlscacerts $STEVENORG_DIR/$org/orderer/$orderer/msp
 done

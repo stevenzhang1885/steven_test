@@ -8,6 +8,7 @@ CSRHOST="0.0.0.0,localhost,$HOSTNAME"
 declare -A tls_ipaddr_list=(["tls.master"]="0.0.0.0:7052")
 tls_list="tls.master"
 rca_list="rca.steven"
+declare -A rca_tls_map=(["rca.steven"]="tls.master")
 
 #clean all
 if [ "$1" == "clean" ];then
@@ -48,6 +49,7 @@ for tls in $tls_list;do
     done
     #Enroll TLS CA identity for RCA.ORG
     for rca in $rca_list;do
+        tls=${rca_tls_map[$rca]}
         echo "fabric-ca-client enroll -d -u https://$rca:$rca-pw@${tls_ipaddr_list[$tls]} --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --enrollment.profile tls --csr.hosts $CSRHOST --mspdir $rca/$tls/msp"
         fabric-ca-client enroll -d -u https://$rca:$rca-pw@${tls_ipaddr_list[$tls]} --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --enrollment.profile tls --csr.hosts $CSRHOST --mspdir $rca/$tls/msp
         if [ "$?" -ne 0 ];then

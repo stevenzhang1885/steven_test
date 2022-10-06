@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export MASTERVIEW_DIR=/mnt/d/myproject/masterview
+export MASTERVIEW_DIR=/mnt/d/steven_test/masterview
 export FABRIC_CA_SERVER_HOME=$MASTERVIEW_DIR/ca/tlsxxx
 
 tls_ca_list="tls.master"

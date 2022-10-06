@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Set Evnriment variable
-export MASTERVIEW_DIR=/mnt/d/myproject/masterview
+export MASTERVIEW_DIR=/mnt/d/steven_test/masterview
 export FABRIC_CA_CLIENT_HOME=$MASTERVIEW_DIR/ca/fabric-ca-client
 CSRHOST="0.0.0.0,localhost,$HOSTNAME" 
 

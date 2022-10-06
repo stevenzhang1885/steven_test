@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-export MASTERVIEW_DIR=/mnt/d/myproject/masterview
+export MASTERVIEW_DIR=/mnt/d/steven_test/masterview
 #Set Evnriment variable
 export FABRIC_CA_SERVER_HOME=$MASTERVIEW_DIR/ca/tlsxxx
 export FABRIC_CA_SERVER_TLS_ENABLED=true
