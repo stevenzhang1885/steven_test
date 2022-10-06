@@ -18,6 +18,11 @@ if [ "$RCA_NAME" == "" ];then
    echo "[WARNING:] RCA_NAME not defined, use difault "RCA_NAME=rca.$ORG_NAME""
    RCA_NAME=rca.$ORG_NAME
 fi
+
+if [ "$PEER_NAME" == "" ];then
+   echo "[WARNING:] RCA_NAME not defined, use difault "PEER_NAME=peer1.$ORG_NAME""
+   RCA_NAME=rca.$PEER_NAME
+fi
 #------------------------------------------------------FABRCI CA CLIENT VARIABLE DEFINITION------------------------------
 export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
 export FABRIC_CA_SERVER_HOME=$FABRIC_BASE_DIR/ca/$RCA_NAME
@@ -30,7 +35,7 @@ tls_admin_dir=$FABRIC_CA_CLIENT_HOME/$TLS_NAME-admin
 if [ "$1" == "clean" ];then
 
     echo "-------------------------------------------------Clean: rm $FABRIC_CA_CLIENT_HOME/$rca ------------------------------------------------------"
-    rm $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME -rf
+    rm $FABRIC_CA_CLIENT_HOME/$RCA_NAME -rf
     rm $FABRIC_CA_SERVER_HOME/$TLS_NAME-certs -rf
     exit 0
 fi 
@@ -43,14 +48,10 @@ if [ "$?" -ne 0 ];then
 fi
 
 #Enroll
-fabric-ca-client enroll -d -u https://$RCA_NAME:$RCA_NAME.pw@$tls_ipaddr_port --tls.certfiles $TLS_NAME-root-cert/$TLS_NAME-ca-cert.pem --enrollment.profile tls --csr.hosts $CSRHOST --mspdir $TLS_NAME.signed/$RCA_NAME/msp
+fabric-ca-client enroll -d -u https://$RCA_NAME:$RCA_NAME.pw@$tls_ipaddr_port --tls.certfiles $TLS_NAME-root-cert/$TLS_NAME-ca-cert.pem --enrollment.profile tls --csr.hosts $CSRHOST --mspdir $RCA_NAME/msp
 if [ "$?" -ne 0 ];then
     exit 1
 fi
 mkdir -p $FABRIC_CA_SERVER_HOME/$TLS_NAME-certs
-rm $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/signcerts/cert-signed-by-$TLS_NAME.pem
-mv $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/signcerts/cert-signed-by-$TLS_NAME.pem
-cp $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/signcerts/cert-signed-by-$TLS_NAME.pem $FABRIC_CA_SERVER_HOME/$TLS_NAME-certs/
-rm $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/keystore/key-signed-by-$TLS_NAME.pem
-mv $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/keystore/* $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/keystore/key-signed-by-$TLS_NAME.pem
-cp $FABRIC_CA_CLIENT_HOME/$TLS_NAME.signed/$RCA_NAME/msp/keystore/key-signed-by-$TLS_NAME.pem $FABRIC_CA_SERVER_HOME/$TLS_NAME-certs/
+cp $FABRIC_CA_CLIENT_HOME/$RCA_NAME/msp/signcerts/cert.pem $FABRIC_CA_SERVER_HOME/$TLS_NAME-certs/cert.pem
+cp $FABRIC_CA_CLIENT_HOME/$RCA_NAME/msp/keystore/* $FABRIC_CA_SERVER_HOME/$TLS_NAME-certs/key

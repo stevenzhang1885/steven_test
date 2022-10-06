@@ -292,6 +292,7 @@ csr:
    hosts:
      - LAPTOP-MJICSLF2
      - localhost
+     - 0.0.0.0
    ca:
       expiry: 131400h
       pathlength: 1

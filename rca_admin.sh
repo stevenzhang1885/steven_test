@@ -1,5 +1,4 @@
 #!/bin/bash
-set -v on
 #-----------------------------------------------------PROJECT VARIABLE DEFINITION
 if [ "FABRIC_BASE_DIR" == "" ];then
    echo "[WARNING:] FABRIC_BASE_DIR not defined, use difault "FABRIC_BASE_DIR=/mnt/d/fabric_network_test""
@@ -25,7 +24,7 @@ export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
 #---------------------------------------------------------LOCAL VARIABLE DEFINITION---------------------------------------------------------------
 CSRHOST="0.0.0.0,localhost,$HOSTNAME" 
 rca_ipaddr_port=0.0.0.0:7053
-rca_admin_dir=$FABRIC_CA_CLIENT_HOME/$RCA_NAME.admin
+rca_admin_dir=$FABRIC_CA_CLIENT_HOME/$RCA_NAME-admin
 rca_admin_user=$RCA_NAME.admin
 rca_admin_password=$RCA_NAME.adminpw
 

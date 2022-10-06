@@ -14,7 +14,7 @@ export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
 export FABRIC_CA_SERVER_HOME=$FABRIC_BASE_DIR/ca/$TLS_NAME
 #---------------------------------------------------------LOCAL VARIABLE DEFINITION---------------------------------------------------------------
 tls_ipaddr_port=0.0.0.0:7052
-tls_admin_dir=$FABRIC_CA_CLIENT_HOME/$TLS_NAME.admin
+tls_admin_dir=$FABRIC_CA_CLIENT_HOME/$TLS_NAME-admin
 tls_admin_user=$TLS_NAME.admin
 tls_admin_password=$TLS_NAME.adminpw
 #clean all
