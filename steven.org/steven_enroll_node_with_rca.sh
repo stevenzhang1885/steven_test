@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export STEVENORG_DIR=/mnt/d/myproject/steven.org
+export STEVENORG_DIR=/mnt/d/steven_test/steven.org
 #Set Evnriment variable
 export FABRIC_CA_CLIENT_HOME=$STEVENORG_DIR/ca/fabric-ca-client
 CSRHOST="0.0.0.0,localhost,$HOSTNAME" 
