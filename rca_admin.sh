@@ -1,20 +1,20 @@
 #!/bin/bash
 #-----------------------------------------------------PROJECT VARIABLE DEFINITION
-if [ "FABRIC_BASE_DIR" == "" ];then
+if [ "$FABRIC_BASE_DIR" == "" ];then
    echo "[WARNING:] FABRIC_BASE_DIR not defined, use difault "FABRIC_BASE_DIR=/mnt/d/fabric_network_test""
    FABRIC_BASE_DIR=/mnt/d/fabric_network_test
 fi
-if [ "TLS_NAME" == "" ];then
+if [ "$TLS_NAME" == "" ];then
    echo "[WARNING:] TLS_NAME not defined, use difault "TLS_NAME=tls.master""
    TLS_NAME=tls.master
 fi
 
-if [ "ORG_NAME" == "" ];then
+if [ "$ORG_NAME" == "" ];then
    echo "[WARNING:] ORG_NAME not defined, use difault "ORG_NAME=steven""
    ORG_NAME=steven
 fi
 
-if [ "RCA_NAME" == "" ];then
+if [ "$RCA_NAME" == "" ];then
    echo "[WARNING:] RCA_NAME not defined, use difault "RCA_NAME=rca.$ORG_NAME""
    RCA_NAME=rca.$ORG_NAME
 fi
