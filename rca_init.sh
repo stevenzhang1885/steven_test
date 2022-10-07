@@ -1,10 +1,4 @@
 #!/bin/bash
-#------------------------------------------------------FABRCI CA SERVER VARIABLE DEFINITION------------------------------
-#Set Evnriment variable
-export FABRIC_CA_SERVER_HOME=$FABRIC_BASE_DIR/ca/$RCA_FULL_NAME
-export FABRIC_CA_SERVER_RCA_ENABLED=true
-export FABRIC_CA_SERVER_CSR_HOSTS="0.0.0.0,$HOSTNAME,localhost"
-export FABRIC_CA_SERVER_CSR_CN=$RCA_NAME.$ORG_NAME
 #---------------------------------------------------------LOCAL VARIABLE DEFINITION---------------------------------------------------------------
 rcaInit(){
    rca=$RCA_NAME.$ORG_NAME
@@ -38,7 +32,7 @@ rcaStart(){
 
 rca.clean(){
    rcaInit
-   echo "-------------------------------------------------rcaInit.clean: rm $tca_dir ------------------------------------------------------"
+   echo "-------------------------------------------------rcaInit.clean: rm $ca_dir ------------------------------------------------------"
    rm $ca_dir/IssuerPublicKey -f
    rm $ca_dir/IssuerRevocationPublicKey -f  
    rm $ca_dir/ca-cert.pem -f

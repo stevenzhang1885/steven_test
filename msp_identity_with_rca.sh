@@ -1,23 +1,25 @@
 #!/bin/bash
 #-----------------------------------------------------PROJECT VARIABLE DEFINITION----------------------------------------------
-export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
-
 mspIdentityWithRcaInit(){
-    if [ "$1" == ""];then
+    if [ "$1" == "" ];then
         echo "[WARNING:]  Arg1(node_type) is empty, use difault "node_type=client""
         node_type=client
-        node_name=client$RANDOM.$ORG_NAME
     else
         node_type=$1
-        node_name=$2.$ORG_NAME
     fi
     tls=$TLS_NAME
-    rca=$RCA_NAME.$ORG_NAM
+    rca=$RCA_NAME.$ORG_NAME
     ca_dir=$FABRIC_BASE_DIR/ca/$rca
     rca_ipaddr_port=$RCA_IP_PORT
     client_dir=$FABRIC_BASE_DIR/ca/fabric-ca-client
     rca_admin_dir=$client_dir/$rca-admin
-    msp_dir=$FABRIC_BASE_DIR/{$node_type}MSP/$node_name
+    if [ "$node_type" == "org" ];then
+        node_name=$ORG_NAME 
+        msp_dir=$FABRIC_BASE_DIR/orgMSP/$ORG_NAME
+    else
+        node_name=$2.$ORG_NAME
+        msp_dir=$FABRIC_BASE_DIR/orgMSP/$ORG_NAME/$node_name
+    fi
 }
 #input: $1-node_type $2-node_name
 mspIdentityWithRca(){

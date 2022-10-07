@@ -1,4 +1,6 @@
 #!/bin/bash
+#-----------------------------------------------------------------------------PROJECT BRIC VARIABALE INIT----------------------------------------------------
+
 FABRIC_BASE_DIR=/mnt/d/fabric_network_test
 TLS_NAME=tls.master
 RCA_NAME=rca
@@ -6,6 +8,13 @@ ORG_NAME=stevenOrg
 TLS_IP_PORT="0.0.0.0:7052"
 RCA_IP_PORT="0.0.0.0:7053"
 CSR_HOST="0.0.0.0,localhost,$HOSTNAME" 
+
+#-----------------------------------------------------------------------------FABRIC VARIABALE INIT----------------------------------------------------
+export FABRIC_CA_SERVER_HOME=$FABRIC_BASE_DIR/ca/$RCA_NAME.$ORG_NAME
+export FABRIC_CA_SERVER_RCA_ENABLED=true
+export FABRIC_CA_SERVER_CSR_CN=$TLS_NAME
+export FABRIC_CA_SERVER_CSR_HOSTS=$CSR_HOST
+export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
 
 . env_init.sh
 . tls_init.sh

@@ -1,9 +1,4 @@
 #!/bin/bash
-#------------------------------------------------------FABRCI CA SERVER VARIABLE DEFINITION------------------------------
-export FABRIC_CA_SERVER_HOME=$FABRIC_BASE_DIR/ca/$TLS_NAME
-export FABRIC_CA_SERVER_RCA_ENABLED=true
-export FABRIC_CA_SERVER_CSR_CN=$TLS_NAME
-export FABRIC_CA_SERVER_CSR_HOSTS="0.0.0.0,$HOSTNAME,localhost"
 #---------------------------------------------------------LOCAL VARIABLE DEFINITION---------------------------------------------------------------
 tlsInit(){
    tls=$TLS_NAME

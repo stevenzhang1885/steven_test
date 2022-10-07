@@ -1,7 +1,5 @@
 #!/bin/bash
 #-----------------------------------------------------PROJECT VARIABLE DEFINITION----------------------------------------------
-export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
-
 nodeIdentityWithtlsInit(){
     if [ "$1" == "" ];then
         echo "[WARNING:]  Arg1(node_type) is empty, use difault "node_type=client""

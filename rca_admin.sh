@@ -1,7 +1,5 @@
 #!/bin/bash
 #------------------------------------------------------FABRCI CA CLIENT VARIABLE DEFINITION------------------------------
-export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
-
 rcaAdminInit(){
     tls=$TLS_NAME
     rca=$RCA_NAME.$ORG_NAME
@@ -29,7 +27,7 @@ rcaAdmin.clean(){
 
 rcaAdmin.enrollAdmin(){
     rcaAdminInit
-    rcaAdminEnrroll
+    rcaAdminEnroll
 }
 
 if [ "$1" == "rcaadmin" ];then

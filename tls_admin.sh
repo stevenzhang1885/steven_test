@@ -1,7 +1,5 @@
 #!/bin/bash
 #------------------------------------------------------ VARIABLE DEFINITION------------------------------
-export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
-
 tlsAdminInit(){
     tls=$TLS_NAME
     ca_dir=$FABRIC_BASE_DIR/ca/$tls
