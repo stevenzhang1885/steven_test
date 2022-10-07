@@ -15,18 +15,19 @@ if [ "$ORG_NAME" == "" ];then
 fi
 
 if [ "$RCA_NAME" == "" ];then
-   echo "[WARNING:] RCA_NAME not defined, use difault "RCA_NAME=rca.$ORG_NAME""
-   RCA_NAME=rca.$ORG_NAME
+   echo "[WARNING:] RCA_NAME not defined, use difault "RCA_NAME=rca""
+   RCA_NAME=rca
 fi
+RCA_FULL_NAME=$RCA_NAME.$ORG_NAME
 
 #------------------------------------------------------FABRCI CA CLIENT VARIABLE DEFINITION------------------------------
 export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
 #---------------------------------------------------------LOCAL VARIABLE DEFINITION---------------------------------------------------------------
 CSRHOST="0.0.0.0,localhost,$HOSTNAME" 
 rca_ipaddr_port=0.0.0.0:7053
-rca_admin_dir=$FABRIC_CA_CLIENT_HOME/$RCA_NAME-admin
-rca_admin_user=$RCA_NAME.admin
-rca_admin_password=$RCA_NAME.adminpw
+rca_admin_dir=$FABRIC_CA_CLIENT_HOME/$RCA_FULL_NAME-admin
+rca_admin_user=$RCA_FULL_NAME.admin
+rca_admin_password=$RCA_FULL_NAME.adminpw
 
 #clean all
 if [ "$1" == "clean" ];then
