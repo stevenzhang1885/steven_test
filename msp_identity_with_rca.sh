@@ -1,95 +1,58 @@
 #!/bin/bash
-#--------------------------------------------------------------------------------------------
-#FABRIC_BASE_DIR=
-#TLS_NAME=
-##MSP_TYPE=
-#ORG_NAME=
-#ORDERER_NAME=
-#ORDERER_NAME=
-#PEER_NAME=
-#CLIENT_NAME=
 #-----------------------------------------------------PROJECT VARIABLE DEFINITION----------------------------------------------
-if [ "$FABRIC_BASE_DIR" == "" ];then
-   echo "[WARNING:] FABRIC_BASE_DIR not defined, use difault "FABRIC_BASE_DIR=/mnt/d/fabric_network_test""
-   FABRIC_BASE_DIR=/mnt/d/fabric_network_test
-fi
-if [ "$TLS_NAME" == "" ];then
-   echo "[WARNING:] TLS_NAME not defined, use difault "TLS_NAME=tls.master""
-   TLS_NAME=tls.master
-fi
-
-if [ "$ORG_NAME" == "" ];then
-   echo "[WARNING:] ORG_NAME not defined, use difault "ORG_NAME=steven""
-   ORG_NAME=steven
-fi
-
-if [ "$MSP_TYPE" == "" ];then
-   echo "[WARNING:] MSP_TYPE not defined, use difault "MSP_TYPE=client""
-   MSP_TYPE=client
-fi
-
-if [ "$RCA_NAME" == "" ];then
-   echo "[WARNING:] RCA_NAME not defined, use difault "RCA_NAME=rca""
-   RCA_NAME=rca
-fi
-RCA_FULL_NAME=$RCA_NAME.$ORG_NAME
-
-if [ "$ORDERER_NAME" == "" ];then
-   echo "[WARNING:] ORDERER_NAME not defined, use difault "ORDERER_NAME=orderer""
-   ORDERER_NAME=orderer
-fi
-ORDERER_FULL_NAME=$ORDERER_NAME.$ORG_NAME
-
-if [ "$PEER_NAME" == "" ];then
-   echo "[WARNING:] PEER_NAME not defined, use difault "PEER_NAME=peer""
-   PEER_NAME=peer
-fi
-PEER_FULL_NAME=$PEER_NAME.$ORG_NAME
-
-if [ "$CLIENT_NAME" == "" ];then
-   echo "[WARNING:] CLIENT_NAME not defined, use difault "CLIENT_NAME='client$RANDOM'""
-   CLIENT_NAME=client$RANDOM
-fi
-CLIENT_FULL_NAME=$CLIENT_NAME.$ORG_NAME
-
-#------------------------------------------------------PATH VARIABLE DEFINITION------------------------------
-ORG_MSP_DIR=$FABRIC_BASE_DIR/orgMSP/$ORG_NAME
-ORDERER_MSP_DIR=$ORG_MSP_DIR/ordererMSP/$ORDERER_FULL_NAME
-PEER_MSP_DIR=$ORG_MSP_DIR/peerMSP/$PEER_FULL_NAME
-CLIENT_MSP_DIR=$ORG_MSP_DIR/clientMSP/$CLIENT_FULL_NAME
-FABRIC_CA_SERVER_HOME=$FABRIC_BASE_DIR/ca/$ORG_NAME
 export FABRIC_CA_CLIENT_HOME=$FABRIC_BASE_DIR/ca/fabric-ca-client
-#---------------------------------------------------------LOCAL VARIABLE DEFINITION---------------------------------------------------------------
-CSRHOST="0.0.0.0,localhost,$HOSTNAME" 
-rca_ipaddr_port=0.0.0.0:7053
-rca_admin_dir=$FABRIC_CA_CLIENT_HOME/$RCA_FULL_NAME-admin
 
-if [ "$MSP_TYPE" == "org" ];then
-    node_name=$ORG_NAME
-    msp_dir=$ORG_MSP_DIR
-elif [ "$MSP_TYPE" == "orderer" ];then
-    node_name=$ORDERER_FULL_NAME
-    msp_dir=$ORDERER_MSP_DIR
-elif [ "$MSP_TYPE" == "peer" ];then
-    node_name=$PEER_FULL_NAME
-    msp_dir=$PEER_MSP_DIR
-else  #client
-    node_name=$CLIENT_FULL_NAME
-    msp_dir=$CLIENT_MSP_DIR
+mspIdentityWithRcaInit(){
+    if [ "$1" == ""];then
+        echo "[WARNING:]  Arg1(node_type) is empty, use difault "node_type=client""
+        node_type=client
+        node_name=client$RANDOM.$ORG_NAME
+    else
+        node_type=$1
+        node_name=$2.$ORG_NAME
+    fi
+    tls=$TLS_NAME
+    rca=$RCA_NAME.$ORG_NAM
+    ca_dir=$FABRIC_BASE_DIR/ca/$rca
+    rca_ipaddr_port=$RCA_IP_PORT
+    client_dir=$FABRIC_BASE_DIR/ca/fabric-ca-client
+    rca_admin_dir=$client_dir/$rca-admin
+    msp_dir=$FABRIC_BASE_DIR/{$node_type}MSP/$node_name
+}
+#input: $1-node_type $2-node_name
+mspIdentityWithRca(){
+    echo "-------------------------------------------------mspIdentityWithRca: Register $node_name to $rca  -------------------------------------------------------"
+    fabric-ca-client register -d --id.name $node_name --id.secret $node_name.pw -u https://$rca_ipaddr_port  --tls.certfiles $tls-root-cert/$tls-ca-cert.pem  --mspdir $rca_admin_dir/msp
+    if [ "$?" -ne 0 ];then
+        echo "Register $node_name to $node_name FAIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    fi
+    echo "-------------------------------------------------mspIdentityWithRca: Enroll $node_name to $rca  -------------------------------------------------------"
+    fabric-ca-client enroll -d -u https://$node_name:$node_name.pw@$rca_ipaddr_port --tls.certfiles $tls-root-cert/$tls-ca-cert.pem --csr.hosts $ca_dir --mspdir $msp_dir/msp
+    if [ "$?" -ne 0 ];then
+        exit 1
+    fi
+}
+
+mspIdentityWithRca.clean(){
+    mspIdentityWithRcaInit $1 $2
+    echo "-------------------------------------------------mspIdentityWithRca.clean: rm $msp_dir ------------------------------------------------------"
+    rm $msp_dir -rf
+}
+
+mspIdentityWithRca.registerAndEnroll(){
+    mspIdentityWithRcaInit $1 $2
+    mspIdentityWithRca $1 $2
+}
+
+mspIdentityWithRca.clean(){
+    mspIdentityWithRcaInit $1 $2
+    # to do
+}
+
+if [ "$1" == "msprca" ];then
+    mspIdentityWithRca.registerAndEnroll $2 $3
 fi 
 
-if [ "$1" == "clean" ];then
-    echo "-------------------------------------------------Clean: rm $msp_dir ------------------------------------------------------"
-    rm $msp_dir -rf
-    exit 0
-fi
-echo "-------------------------------------------------Fabric CA Client: Register $node_name to $RCA_FULL_NAME  -------------------------------------------------------"
-fabric-ca-client register -d --id.name $node_name --id.secret $node_name.pw -u https://$rca_ipaddr_port  --tls.certfiles $TLS_NAME-root-cert/$TLS_NAME-ca-cert.pem  --mspdir $rca_admin_dir/msp
-if [ "$?" -ne 0 ];then
-    echo "Register $node_name to $node_name FAIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-fi
-echo "-------------------------------------------------Fabric CA Client: Enroll $node_name to $RCA_FULL_NAME  -------------------------------------------------------"
-fabric-ca-client enroll -d -u https://$node_name:$node_name.pw@$rca_ipaddr_port --tls.certfiles $TLS_NAME-root-cert/$TLS_NAME-ca-cert.pem --csr.hosts $CSRHOST --mspdir $msp_dir/msp
-if [ "$?" -ne 0 ];then
-    exit 1
+if [ "$1" == "msprcaclean" ];then
+   mspIdentityWithRca.clean $2 $3
 fi
